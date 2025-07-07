@@ -1,0 +1,188 @@
+# MegaTetris 项目编码规范
+
+## 🎮 H5游戏开发要求
+
+### 用户体验优先
+- 创建现代化、美观的游戏界面
+- 实现流畅的动画和粒子特效
+- 移动端优化，响应式设计
+- 高DPI支持，确保清晰显示
+
+### 核心功能实现
+- 多行同时消除，而非逐行消除
+- 粒子特效必须在具体被消除的方块位置生成
+- 动画系统要流畅，避免卡顿和时间基准错误
+- 支持测试模式便于调试
+
+## 📝 代码质量标准
+
+### 注释和命名
+- 使用中文注释解释业务逻辑
+- 函数和变量命名要清晰易懂
+- 关键算法必须有详细说明
+
+### 架构设计
+- 采用模块化设计，职责分离
+- 每个类/模块有单一职责
+- 避免紧耦合，便于维护和扩展
+
+### 文件结构和模块化要求
+```
+项目根目录/
+├── main.js           # ES6模块入口（极简，仅导入和实例化）
+├── index.html        # HTML主页面，<script type="module" src="main.js">
+├── style.css         # 独立样式文件
+└── js/               # 模块目录
+    ├── config.js     # 配置模块 (export default CONFIG)
+    ├── pieces.js     # 方块逻辑 (export default TetrisPieces)
+    ├── particles.js  # 粒子系统 (export { Particle, ParticleSystem })
+    ├── ui.js         # UI管理 (export default UIManager)
+    ├── input.js      # 输入控制 (export default InputManager)
+    ├── tetris.js     # 游戏核心 (export default TetrisGame)
+    ├── renderer.js   # 渲染引擎 (export default GameRenderer)
+    └── game.js       # 主控制器 (export default MegaTetris)
+```
+
+### ES6导入导出规范
+```javascript
+// 配置文件导出
+export default CONFIG;
+
+// 类模块导出
+export default ClassName;
+
+// 多个导出
+export { Class1, Class2 };
+
+// 导入示例
+import CONFIG from './config.js';
+import MegaTetris from './game.js';
+import { Particle, ParticleSystem } from './particles.js';
+```
+
+## 🐛 Bug修复原则
+
+### 问题诊断
+- 仔细分析症状，找到根本原因
+- 优先修复影响核心功能的bug
+- 注意时间基准、回调函数等容易出错的地方
+
+### 解决方案
+- 提供清晰的问题分析和修复说明
+- 一次性修复完整问题，避免残留
+- 添加防御性代码避免类似问题
+
+## 🚀 性能优化要求
+
+### 渲染性能
+- 避免不必要的canvas重绘
+- 合理使用requestAnimationFrame
+- 粒子系统要高效，不影响游戏帧率
+
+### 内存管理
+- 及时清理定时器和事件监听器
+- 避免内存泄漏
+- 粒子对象要正确回收
+
+## 🧪 测试和调试
+
+### 测试功能集成
+- 提供测试模式切换
+- 支持快速触发特定场景
+- 保留调试信息但不影响正常游戏
+
+### 错误处理
+- 优雅的错误提示
+- 防止程序崩溃
+- 提供恢复机制
+
+## 🎨 视觉效果要求
+
+### 粒子特效
+- 消除特效要在具体方块位置
+- 支持多种特效（爆炸、彩虹、连击）
+- 特效强度与游戏事件匹配
+
+### 动画系统
+- 平滑的过渡动画
+- 正确的时间基准处理
+- 阶段化动画流程（clearing → dropping → complete）
+
+## 📱 移动端适配
+
+### 触控优化
+- 虚拟按键布局合理
+- 手势操作流畅
+- 防止误触
+
+### 界面适配
+- 响应式布局
+- 合适的按钮大小
+- 良好的视觉层次
+
+## 🌟 现代化标准要求
+
+### ES6 模块系统（强制要求）
+- **必须使用ES6 import/export**，禁止动态createElement加载
+- **单一入口原则**：main.js只负责导入和实例创建
+- **依赖管理自动化**：通过import自动解析模块依赖
+- **职责分离**：初始化逻辑归类管理，入口文件保持极简
+
+### 模块化架构标准
+```javascript
+// ✅ 推荐：ES6模块导入
+import MegaTetris from './js/game.js';
+
+// ❌ 禁止：动态脚本创建
+document.createElement('script');
+```
+
+### 现代JavaScript规范
+- 使用 `const`/`let` 替代 `var`
+- 优先使用箭头函数和解构赋值
+- 利用模板字符串和默认参数
+- 合理使用异步/await处理异步操作
+
+### 架构简洁性原则
+- **极简入口**：main.js控制在15行以内
+- **单一职责**：每个模块只负责一个核心功能
+- **错误处理集中**：避免重复的try-catch嵌套
+- **依赖关系清晰**：通过import明确表达模块依赖
+
+## 💡 代码实现偏好
+
+- **强制使用ES6+现代语法**
+- 避免全局变量污染
+- 合理使用回调和事件系统
+- 注重代码可读性和可维护性
+- 及时重构和优化代码结构
+- **拥抱现代前端最佳实践**
+
+## 🔧 特定技术要求
+
+### ES6模块加载机制
+- **HTML中使用 `<script type="module">`**
+- **浏览器原生模块解析**，无需手动管理加载顺序
+- **模块缓存优化**，重复导入自动缓存
+- **并行加载**，依赖模块可同时加载
+
+### Canvas 渲染
+- 正确处理高DPI设备
+- 避免重复调用setupHighDPI()
+- 合理管理Canvas尺寸
+
+### 时间和动画
+- 统一使用requestAnimationFrame的时间基准
+- 避免混用Date.now()和currentTime
+- 确保动画状态正确切换
+
+### 事件系统
+- 回调函数要完整绑定
+- 避免事件监听器泄漏
+- 正确处理异步事件
+
+### 现代化开发流程
+- **优先ES6模块** > CommonJS > 动态脚本加载
+- **信任浏览器优化** > 手动性能调优
+- **标准化语法** > 兼容性代码
+- **类型明确** > 运行时检查 
