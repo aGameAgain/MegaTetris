@@ -267,4 +267,4 @@ class ParticleSystem {
 }
 
 // 导出
-export { ParticleSystem };
+export default ParticleSystem;
